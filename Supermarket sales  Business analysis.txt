@@ -1,0 +1,425 @@
+
+--- Number Of Customer Type Of Each City
+Select *
+From dbo.['supermarket_sales - Sheet1$'] 
+Where Branch is not Null
+
+
+Select Distinct([Customer type]), Count([Customer type])As CustomersNumber, Branch, City
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By [Customer type], Branch, City
+order by Branch 
+
+
+
+--- Total Customers
+
+Select Distinct([Customer type]), Count([Customer type])As CustomersNumber
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By [Customer type]
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+--- Which gender makes the greater number of purchases?    
+
+----           gender makes the greater number of purchases Per Branch   ----------
+
+Select Distinct(Gender), Count(Gender)As CustomersNumber, Branch, City
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By Gender, Branch, City
+order by Branch 
+
+----           gender makes the greater number of purchases    ----------
+
+Select Distinct(Gender), Count(Gender)As CustomersNumber
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By Gender
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+--- Member And Normal Gender Per City
+
+----                           Member Customer Gender                   --------------
+
+Select Distinct([Customer type]), Count([Customer type])As CustomersNumber,Gender, Branch, City
+From dbo.['supermarket_sales - Sheet1$']
+Where [Customer type] = 'Member'
+ Group By [Customer type], Gender, Branch, City
+ order by Branch
+
+ ----                           Normal Customer Gender                   --------------
+
+Select Distinct([Customer type]), Count([Customer type])As CustomersNumber,Gender, Branch, City
+From dbo.['supermarket_sales - Sheet1$']
+Where [Customer type] = 'Normal'
+ Group By [Customer type], Gender, Branch, City
+ order by Branch
+
+ 
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+--- Product Sales And Buy's ( City, Custemer_Type, Gender, In_General)
+
+Select *
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+
+----                           Global Product Line Sales                   --------------
+
+Select Distinct([Product line]), COUNT([Product line])As Product_Sales
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By [Product line]
+Order By Product_Sales DESC
+
+---                    Branches Global Sales               ------------------
+
+Select COUNT([Product line])As Product_Sales, Branch, City
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+ Group By Branch, City
+Order By Product_Sales DESC
+
+----                           Product Line Sales In Branch A                   --------------
+
+Select Distinct([Product line]), COUNT([Product line])As Product_Sales, Branch, City
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch Like 'A' 
+Group By [Product line], Branch, City
+Order By Product_Sales DESC
+
+----                           Product Line Sales In Branch B                  --------------
+
+Select Distinct([Product line]), COUNT([Product line])As Product_Sales, Branch, City
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch Like 'B' 
+Group By [Product line], Branch, City
+Order By Product_Sales DESC
+
+----                           Product Line Sales In Branch  C                 --------------
+
+Select Distinct([Product line]), COUNT([Product line])As Product_Sales, Branch, City
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch Like 'C' 
+Group By [Product line], Branch, City
+Order By Product_Sales DESC
+
+---                    Product Buy's Per Type Of Customer            --------------------
+
+Select Distinct([Product line]), COUNT([Product line])As Product_Buy, [Customer type]
+From dbo.['supermarket_sales - Sheet1$']
+Group By [Product line], [Customer type]
+Order By [Product line]  
+
+---                    Product Buy's Per Gender               ------------------
+
+Select Distinct([Product line]), COUNT([Product line])As Product_Buy, Gender
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By [Product line], Gender
+Order By [Product line] 
+
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+--- Price Avg By Product And City
+
+
+Select *
+From dbo.['supermarket_sales - Sheet1$'] 
+Where Branch is not Null
+
+---                    AvgUnitPrice Per Product Line              ------------------
+
+Select [Product line], AVG([Unit price]) As AvgUnitPrice
+From dbo.['supermarket_sales - Sheet1$'] 
+Where Branch is not Null
+Group By [Product line]
+order By AvgUnitPrice desc
+
+---                     AvgUnitPrice Per City               ------------------
+
+Select  Branch ,City, AVG([Unit price]) As AvgUnitPrice
+From dbo.['supermarket_sales - Sheet1$'] 
+Where Branch is not Null
+Group By City, Branch
+
+---                     Min And Max ProductPrice Per City               ------------------
+
+Select  Branch ,City, [Product line], min([Unit price])As MinProductPrice, max([Unit price]) As MaxProductPrice 
+From dbo.['supermarket_sales - Sheet1$'] 
+Where Branch is not Null
+Group By City, Branch, [Product line]
+order by [Product line], Branch
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+--- Quantity ( City, Custemer_Type, Gender, Product_Line)
+
+---                    Total Quantity Sales              ------------------
+
+Select  SUM(Quantity) As Total_Quantity_Sales
+From dbo.['supermarket_sales - Sheet1$'] 
+
+---                     Total Quantity Sales Per City               ------------------
+
+Select Branch ,City, Sum(Quantity) As Total_Quantity_Sales
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By City, Branch
+
+---                     Total Quantity Sales Per Product line              ------------------
+
+Select DISTINCT([Product line]) ,Sum(Quantity) As Total_Quantity_Sales
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By [Product line]
+
+---                     Total Quantity Buys Per Gender              ------------------
+
+Select Gender, Sum(Quantity) As Total_Quantity_Buys
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By Gender
+
+---                     Total Quantity Buys Per Customer type              ------------------
+
+Select [Customer type], Sum(Quantity) As Total_Quantity_Buys
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By [Customer type]
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+--- The Total ( City, Custemer_Type, Gender, Product_Line)
+
+Select *
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+
+---                     Total Sales Income Per City              ------------------
+
+Select Branch, City, Sum(Cogs) As TotalWithNoTax, Sum([Tax 5%]) As TotalTaxIncome,
+Sum(Cogs) + Sum([Tax 5%]) As TotalIncome
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By Branch, City
+Order By TotalWithNoTax desc
+
+---                     Total Sales Income Per Product line            ------------------
+
+Select [Product line], Sum(Cogs) As TotalWithNoTax, Sum([Tax 5%]) As TotalTaxIncome,
+Sum(Cogs) + Sum([Tax 5%]) As TotalIncome
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By [Product line]
+Order By TotalWithNoTax desc
+
+---                     Total Buy's Payed Per Customer type            ------------------
+
+Select [Customer type], Sum(Cogs) As TotalWithNoTax, Sum([Tax 5%]) As TotalTaxPayed,
+Sum(Cogs) + Sum([Tax 5%]) As TotalPayed
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By [Customer type]
+Order By TotalWithNoTax desc
+
+---                     Total Buy's Payed Per Gender             ------------------
+
+Select Gender, Sum(Cogs) As TotalWithNoTax, Sum([Tax 5%]) As TotalTaxPayed,
+Sum(Cogs) + Sum([Tax 5%]) As TotalPayed
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By Gender
+Order By TotalWithNoTax desc
+
+
+---------------------------------------------------------------------------------------------------------------------
+
+--- Payment Method ( City, Custemer_Type, Gender)
+
+Select *
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+
+---                     Payment Methods              ------------------
+
+Select Distinct(Payment), Count(Payment) As TotalUse
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By Payment
+
+---                     Payment Methods Per City            ------------------
+
+Select Distinct(Payment), Count(Payment)As TotalUse, Branch, City
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By Payment, Branch, City
+Order By Branch
+
+---                     Payment Methods Per Customer type           ------------------
+
+Select Distinct(Payment), Count(Payment)As TotalUse, [Customer type]
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By Payment, [Customer type]
+Order By Payment
+
+---                     Payment Methods Per Gender             ------------------
+
+Select Distinct(Payment), Count(Payment)As TotalUse,  Gender
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By Payment, Gender
+Order By Payment
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+--- Rating ( City, Custemer_Type, Gender)
+
+
+Select *
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+
+
+---                     AVG Rating Per City            ------------------
+
+Select  Branch ,City, AVG(Rating) 
+From dbo.['supermarket_sales - Sheet1$'] 
+Where Branch is not Null
+Group By City, Branch
+
+---                     AVG Rating Per Customer type             ------------------
+
+Select  Branch ,City, [Customer type], AVG(Rating) 
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By [Customer type], Branch ,City
+order by Branch
+
+---                     AVG Rating Per Gender             ------------------
+
+Select  Gender, AVG(Rating) 
+From dbo.['supermarket_sales - Sheet1$']
+Where Branch is not Null
+Group By Gender
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+     
+	 ---  Quantity And Income In WeekDay's
+
+	 ----                 The Global Quantity And Income Per WeekDay's                     ------------------
+
+	 Select DaySlot, SUM(Quantity) As DayQuantity, SUM([Gross Income]) As DayIncome
+	 From [dbo].['supermarket_sales - Sheet1$']
+	 Where Quantity is not Null
+	 group by DaySlot
+	 Order By DayQuantity desc
+
+	 ----                 Quantity And Income Per WeekDay's In Branch A             -----------------------
+
+	  Select Branch, DaySlot, SUM(Quantity) As DayQuantity, SUM([Gross Income]) As DayIncome
+	 From dbo.['supermarket_sales - Sheet1$']
+	 Where Branch = 'A'
+	 group by DaySlot, Branch
+	 Order By DayQuantity desc
+
+	 ----                 Quantity And Income Per WeekDay's In Branch B             -----------------------
+
+	 	  Select Branch, DaySlot, SUM(Quantity) As DayQuantity, SUM([Gross Income]) As DayIncome
+	 From #Prime_Times
+	 Where Branch = 'B'
+	 group by DaySlot, Branch
+	 Order By DayQuantity desc	  
+	 
+	 ----                 Quantity And Income Per Day times In Branch C            -----------------------
+	 
+	 Select Branch, DaySlot, SUM(Quantity) As DayQuantity, SUM([Gross Income]) As DayIncome
+	 From #Prime_Times
+	 Where Branch = 'C'
+	 group by DaySlot, Branch
+	 Order By DayQuantity desc
+
+	 ------------------------------------------------------------------------------------------------------------------------------
+	 
+	 ---  Quantity And Income In Day times
+
+	 ----                 The Global Quantity And Income Per Day times                     ------------------
+
+
+	  Select TimeSlot, SUM(Quantity) As TimeQuantity, SUM([Gross Income]) As TimeIncome
+	 From dbo.['supermarket_sales - Sheet1$']
+	 Where Quantity is not Null
+	 group by TimeSlot
+	 Order By TimeQuantity desc
+
+	 ----                 Quantity And Income Per Day times In Branch A           -----------------------
+
+	 Select Branch, TimeSlot, SUM(Quantity) As TimeQuantity, SUM([Gross Income]) As TimeIncome
+	 From dbo.['supermarket_sales - Sheet1$']
+	 Where Branch = 'A'
+	 group by TimeSlot, Branch
+	 Order By TimeQuantity desc
+
+	 ----                 Quantity And Income Per Day times In Branch B            -----------------------
+
+	 Select Branch, TimeSlot, SUM(Quantity) As TimeQuantity, SUM([Gross Income]) As TimeIncome
+	 From dbo.['supermarket_sales - Sheet1$']
+	 Where Branch = 'B'
+	 group by TimeSlot, Branch
+	 Order By TimeQuantity desc
+
+	 ----                 Quantity And Income Per Day times In Branch C            -----------------------
+
+	 Select Branch, TimeSlot, SUM(Quantity) As TimeQuantity, SUM([Gross Income]) As TimeIncome
+	 From dbo.['supermarket_sales - Sheet1$']
+	 Where Branch = 'C'
+	 group by TimeSlot, Branch
+	 Order By TimeQuantity desc
+
+	 ----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
